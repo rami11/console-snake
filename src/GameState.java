@@ -1,25 +1,30 @@
-import canvas.*;
+import canvas.Ground;
+import canvas.Position;
+import canvas.Snake;
 import canvas.Snake.Direction;
+import canvas.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameState implements Snake.ValueChangeListener {
+public class GameState {
+    private static final Ground GROUND = new Ground();
+    List<Position> oldSnakeCorePositions = new ArrayList<>();
+
     private int m;
     private int n;
 
     private Tile[][] canvas;
     private Snake snake;
 
-    private List<ActionButtonClickListener> actionButtonClickEvents;
-
     public GameState(Tile[][] canvas) {
-        actionButtonClickEvents = new ArrayList<>();
-
         this.canvas = canvas;
         m = canvas.length;
         n = canvas[0].length;
-        snake = new Snake(this);
+        snake = new Snake(() -> {
+            display();
+            System.out.println();
+        });
         display();
     }
 
@@ -35,27 +40,12 @@ public class GameState implements Snake.ValueChangeListener {
 
     public void changeSnakeDirection(Direction direction) {
         snake.setDirection(direction);
+        System.out.println("Direction now: " + direction);
     }
 
     public void moveSnake() {
-        if (isSnakeInCanvas(snake.getHeadPosition())) {
-            Direction direction = snake.getDirection();
-            switch (direction) {
-                case UP:
-                    snake.moveUp();
-                    break;
-                case DOWN:
-                    snake.moveDown();
-                    break;
-                case LEFT:
-                    snake.moveLeft();
-                    break;
-                case RIGHT:
-                    snake.moveRight();
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + direction);
-            }
+        if (isSnakeOnCanvas(snake.getHeadPosition())) {
+            snake.stepForward();
         } else {
             System.out.println("*************");
             System.out.println("* GAME OVER *");
@@ -66,27 +56,27 @@ public class GameState implements Snake.ValueChangeListener {
 
     private void putSnakeOnCanvas() {
         //todo: handle snake hits fruit
+
+//        oldSnakeCorePositions.forEach(position -> canvas[position.getX()][position.getY()] = GROUND);
+//        System.out.println("old positions:");
+//        oldSnakeCorePositions.forEach(position -> System.out.print(position + " "));
+//        System.out.println();
+//
+        oldSnakeCorePositions.forEach(position -> canvas[position.getX()][position.getY()] = GROUND);
+        System.out.println("new positions:");
+        snake.getCorePositions().forEach(position -> System.out.print(position + " "));
+        System.out.println();
+
         snake.getCorePositions().forEach(position -> {
             canvas[position.getX()][position.getY()] = snake;
         });
+        oldSnakeCorePositions.clear();
+        oldSnakeCorePositions.addAll(snake.getCorePositions());
     }
 
-    private boolean isSnakeInCanvas(Position position) {
+    private boolean isSnakeOnCanvas(Position position) {
         int x = position.getX();
         int y = position.getY();
         return (x > 0 && x < m - 1) && (y > 0 && y < n - 1);
-    }
-
-    public void onActionButtonClick(ActionButtonClickListener listener) {
-        actionButtonClickEvents.add(listener);
-    }
-
-    @Override
-    public void notifyValueChanged() {
-        display();
-    }
-
-    interface ActionButtonClickListener {
-        void actionButtonClick();
     }
 }

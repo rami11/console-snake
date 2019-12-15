@@ -3,44 +3,25 @@ package canvas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Snake implements Tile, Movable {
-    ValueChangeListener listener;
+public class Snake implements Tile {
+    private OnStepForward listener;
     private Direction direction;
     private List<Position> corePositions;
 
-    public Snake(ValueChangeListener listener) {
+    public Snake(OnStepForward listener) {
         this(listener, new Position(8, 8));
     }
 
-    public Snake(ValueChangeListener listener, Position position) {
-        this.direction = Direction.UP;
+    public Snake(OnStepForward listener, Position position) {
+        this.direction = Direction.LEFT;
         this.corePositions = new ArrayList<>();
         this.corePositions.add(position);
         this.listener = listener;
     }
 
-    @Override
-    public void moveUp() {
-        updateCorePositions(Direction.UP);
-        listener.notifyValueChanged();
-    }
-
-    @Override
-    public void moveDown() {
-        updateCorePositions(Direction.DOWN);
-        listener.notifyValueChanged();
-    }
-
-    @Override
-    public void moveLeft() {
-        updateCorePositions(Direction.LEFT);
-        listener.notifyValueChanged();
-    }
-
-    @Override
-    public void moveRight() {
-        updateCorePositions(Direction.RIGHT);
-        listener.notifyValueChanged();
+    public void stepForward() {
+        updateCorePositions(this.direction);
+        listener.notifyStepForward();
     }
 
     public Position getHeadPosition() {
@@ -51,11 +32,7 @@ public class Snake implements Tile, Movable {
         return corePositions;
     }
 
-    public synchronized Direction getDirection() {
-        return direction;
-    }
-
-    public synchronized void setDirection(Direction direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
@@ -74,10 +51,10 @@ public class Snake implements Tile, Movable {
                 headPosition.setX(headPosition.getX() + 1);
                 break;
             case LEFT:
-                headPosition.setX(headPosition.getY() - 1);
+                headPosition.setY(headPosition.getY() - 1);
                 break;
             case RIGHT:
-                headPosition.setX(headPosition.getY() + 1);
+                headPosition.setY(headPosition.getY() + 1);
                 break;
         }
         corePositions.add(0, headPosition);
@@ -95,7 +72,7 @@ public class Snake implements Tile, Movable {
         RIGHT
     }
 
-    public interface ValueChangeListener {
-        void notifyValueChanged();
+    public interface OnStepForward {
+        void notifyStepForward();
     }
 }
