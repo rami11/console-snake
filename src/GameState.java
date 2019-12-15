@@ -1,15 +1,12 @@
-import canvas.Ground;
-import canvas.Position;
-import canvas.Snake;
+import canvas.*;
 import canvas.Snake.Direction;
-import canvas.Tile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameState {
     private static final Ground GROUND = new Ground();
-    List<Position> oldSnakeCorePositions = new ArrayList<>();
+    private static final Wall WALL = new Wall();
+    private static final Fruit FRUIT = new Fruit();
+
+    private static Position fruitPosition;
 
     private int m;
     private int n;
@@ -18,33 +15,34 @@ public class GameState {
     private Snake snake;
 
     public GameState(Tile[][] canvas) {
+        fruitPosition = new Position((int) (Math.random() * 13) + 1, (int) (Math.random() * 14) + 1);
+        System.out.println("Fruit position: " + fruitPosition);
         this.canvas = canvas;
         m = canvas.length;
         n = canvas[0].length;
         snake = new Snake(() -> {
             display();
-            System.out.println();
         });
-        display();
     }
 
     private void display() {
+        updateCanvas();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 System.out.print(canvas[i][j] + " ");
             }
             System.out.println();
         }
-        putSnakeOnCanvas();
+
     }
 
     public void changeSnakeDirection(Direction direction) {
         snake.setDirection(direction);
-        System.out.println("Direction now: " + direction);
+        System.out.println(direction);
     }
 
     public void moveSnake() {
-        if (isSnakeOnCanvas(snake.getHeadPosition())) {
+        if (!isSnakeNextToWall()) {
             snake.stepForward();
         } else {
             System.out.println("*************");
@@ -54,29 +52,37 @@ public class GameState {
         }
     }
 
-    private void putSnakeOnCanvas() {
+    private void updateCanvas() {
         //todo: handle snake hits fruit
 
-//        oldSnakeCorePositions.forEach(position -> canvas[position.getX()][position.getY()] = GROUND);
-//        System.out.println("old positions:");
-//        oldSnakeCorePositions.forEach(position -> System.out.print(position + " "));
-//        System.out.println();
-//
-        oldSnakeCorePositions.forEach(position -> canvas[position.getX()][position.getY()] = GROUND);
-        System.out.println("new positions:");
-        snake.getCorePositions().forEach(position -> System.out.print(position + " "));
-        System.out.println();
+        clearCanvas();
 
+        // put fruit on canvas
+        canvas[fruitPosition.getX()][fruitPosition.getY()] = FRUIT;
+
+        // put snake on canvas
         snake.getCorePositions().forEach(position -> {
             canvas[position.getX()][position.getY()] = snake;
         });
-        oldSnakeCorePositions.clear();
-        oldSnakeCorePositions.addAll(snake.getCorePositions());
     }
 
-    private boolean isSnakeOnCanvas(Position position) {
-        int x = position.getX();
-        int y = position.getY();
-        return (x > 0 && x < m - 1) && (y > 0 && y < n - 1);
+    private void clearCanvas() {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || i == m - 1 || j == 0 || j == n - 1) {
+                    canvas[i][j] = WALL;
+                } else {
+                    canvas[i][j] = GROUND;
+                }
+            }
+        }
+    }
+
+    private boolean isSnakeNextToWall() {
+        Position headPosition = snake.getHeadPosition();
+        int x = headPosition.getX();
+        int y = headPosition.getY();
+        System.out.println(headPosition);
+        return (x <= 1 || x >= m - 2) || (y <= 1 || y >= n - 2);
     }
 }

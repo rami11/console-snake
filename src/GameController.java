@@ -1,6 +1,5 @@
 import canvas.Snake;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,7 +29,6 @@ public class GameController {
                             state.changeSnakeDirection(Snake.Direction.DOWN);
                             break;
                     }
-//                    state.moveSnake();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
