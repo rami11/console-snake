@@ -8,6 +8,8 @@ public class Snake implements Tile {
     private Direction direction;
     private List<Position> corePositions;
 
+    private boolean eatFruit;
+
     public Snake(Position position, OnStepForward listener) {
         this.direction = Direction.LEFT;
         this.corePositions = new ArrayList<>();
@@ -32,12 +34,24 @@ public class Snake implements Tile {
         this.direction = direction;
     }
 
+    public void eatFruit(OnEatFruit listener) {
+        this.eatFruit = true;
+        listener.notifyEatFruit();
+        System.out.println("Yam yam!");
+    }
+
     private void updateCorePositions(Direction direction) {
         Position headPosition = corePositions.get(0);
         for (int i = 0; i < corePositions.size() - 1; i++) {
             corePositions.set(i, corePositions.get(i + 1));
         }
-        corePositions.remove(corePositions.size() - 1);
+        //System.out.println("Eat fruit? " + eatFruit);
+        if (!eatFruit) {
+            corePositions.remove(corePositions.size() - 1);
+        } else {
+            System.out.println("don't remove tail position: " + corePositions.get(corePositions.size() - 1));
+            eatFruit = false;
+        }
 
         switch (direction) {
             case UP:
@@ -70,5 +84,9 @@ public class Snake implements Tile {
 
     public interface OnStepForward {
         void notifyStepForward();
+    }
+
+    public interface OnEatFruit {
+        void notifyEatFruit();
     }
 }
