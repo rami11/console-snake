@@ -1,7 +1,8 @@
+package core;
+
 import canvas.*;
 import canvas.Snake.Direction;
-
-import java.util.Random;
+import util.Util;
 
 public class GameState {
     private static int score = 0;
@@ -25,7 +26,7 @@ public class GameState {
             updateCanvas();
             stepCount++;
         });
-        fruit = new Fruit(getRandomPosition());
+        fruit = new Fruit(getRandomPositionInCanvas());
     }
 
     private void updateCanvas() {
@@ -40,7 +41,7 @@ public class GameState {
         } else if (tileAtHead instanceof Fruit) {
             snake.eatFruit(() -> {
                 score++;
-                fruit.setPosition(getRandomPosition());
+                fruit.setPosition(getRandomPositionInCanvas());
             });
         }
 
@@ -88,20 +89,7 @@ public class GameState {
         }
     }
 
-    /*
-    Utils
-     */
-
-    private int getRandomInt(int min, int max) {
-        Random r = new Random();
-        return r.ints(min, (max + 1)).findFirst().orElse(1);
-    }
-
-    private int getRandomInt(int max) {
-        return getRandomInt(1, max);
-    }
-
-    private Position getRandomPosition() {
-        return new Position(getRandomInt(14), getRandomInt(15));
+    public Position getRandomPositionInCanvas() {
+        return new Position(Util.getRandomInt(m - 2), Util.getRandomInt(n - 2));
     }
 }

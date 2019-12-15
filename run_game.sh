@@ -5,4 +5,4 @@ fi
 cd src
 javac *.java -d ../script_out/.
 cd ../script_out
-java GameStarter
+java core.GameStarter

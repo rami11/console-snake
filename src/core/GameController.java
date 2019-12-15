@@ -1,3 +1,5 @@
+package core;
+
 import canvas.Snake;
 
 import java.io.BufferedReader;

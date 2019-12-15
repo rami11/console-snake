@@ -1,4 +1,5 @@
-import canvas.Fruit;
+package core;
+
 import canvas.Ground;
 import canvas.Tile;
 import canvas.Wall;
