@@ -8,20 +8,11 @@ public class Snake implements Tile {
     private Direction direction;
     private List<Position> corePositions;
 
-    private Position oldTailPosition;
-
-    public Snake(OnStepForward listener) {
-        //todo: set random position
-        this(listener, new Position(8, 8));
-    }
-
-    public Snake(OnStepForward listener, Position position) {
+    public Snake(Position position, OnStepForward listener) {
         this.direction = Direction.LEFT;
         this.corePositions = new ArrayList<>();
         this.corePositions.add(position);
         this.listener = listener;
-
-        oldTailPosition = position;
     }
 
     public void stepForward() {
@@ -41,13 +32,8 @@ public class Snake implements Tile {
         this.direction = direction;
     }
 
-    public Position getOldTailPosition() {
-        return oldTailPosition;
-    }
-
     private void updateCorePositions(Direction direction) {
         Position headPosition = corePositions.get(0);
-        this.oldTailPosition = corePositions.get(corePositions.size() - 1);
         for (int i = 0; i < corePositions.size() - 1; i++) {
             corePositions.set(i, corePositions.get(i + 1));
         }
