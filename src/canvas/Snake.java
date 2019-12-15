@@ -4,46 +4,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Snake implements Tile, Movable {
+    ValueChangeListener listener;
     private Direction direction;
     private List<Position> corePositions;
-    private Position position;
 
-    public Snake(Position position) {
-        direction = Direction.UP;
-        corePositions = new ArrayList<>();
-        corePositions.add(position);
+    public Snake(ValueChangeListener listener) {
+        this(listener, new Position(8, 8));
+    }
+
+    public Snake(ValueChangeListener listener, Position position) {
+        this.direction = Direction.UP;
+        this.corePositions = new ArrayList<>();
+        this.corePositions.add(position);
+        this.listener = listener;
     }
 
     @Override
     public void moveUp() {
-        corePositions.forEach(position -> position.setX(position.getX() - 1));
+        updateCorePositions(Direction.UP);
+        listener.notifyValueChanged();
     }
 
     @Override
     public void moveDown() {
-        corePositions.forEach(position -> position.setX(position.getX() + 1));
+        updateCorePositions(Direction.DOWN);
+        listener.notifyValueChanged();
     }
 
     @Override
     public void moveLeft() {
-        corePositions.forEach(position -> position.setY(position.getY() - 1));
+        updateCorePositions(Direction.LEFT);
+        listener.notifyValueChanged();
     }
 
     @Override
     public void moveRight() {
-        corePositions.forEach(position -> position.setY(position.getY() + 1));
+        updateCorePositions(Direction.RIGHT);
+        listener.notifyValueChanged();
     }
 
-    public Position getPosition() {
+    public Position getHeadPosition() {
         return corePositions.get(0);
     }
 
-    public int getPositionX() {
-        return corePositions.get(0).getX();
-    }
-
-    public int getPositionY() {
-        return corePositions.get(0).getY();
+    public List<Position> getCorePositions() {
+        return corePositions;
     }
 
     public synchronized Direction getDirection() {
@@ -52,6 +57,30 @@ public class Snake implements Tile, Movable {
 
     public synchronized void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    private void updateCorePositions(Direction direction) {
+        Position headPosition = corePositions.get(0);
+        for (int i = 0; i < corePositions.size() - 1; i++) {
+            corePositions.set(i, corePositions.get(i + 1));
+        }
+        corePositions.remove(corePositions.size() - 1);
+
+        switch (direction) {
+            case UP:
+                headPosition.setX(headPosition.getX() - 1);
+                break;
+            case DOWN:
+                headPosition.setX(headPosition.getX() + 1);
+                break;
+            case LEFT:
+                headPosition.setX(headPosition.getY() - 1);
+                break;
+            case RIGHT:
+                headPosition.setX(headPosition.getY() + 1);
+                break;
+        }
+        corePositions.add(0, headPosition);
     }
 
     @Override
@@ -64,5 +93,9 @@ public class Snake implements Tile, Movable {
         DOWN,
         LEFT,
         RIGHT
+    }
+
+    public interface ValueChangeListener {
+        void notifyValueChanged();
     }
 }

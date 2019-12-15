@@ -23,9 +23,9 @@ public class GameLoader {
 
             Tile[][] canvas = new Tile[m][n];
             for (int i = 0; i < m; i++) {
-                String[] row = reader.readLine().trim().split(" ");
+                String[] rowCells = reader.readLine().trim().split(" ");
                 for (int j = 0; j < n; j++) {
-                    switch (row[j]) {
+                    switch (rowCells[j]) {
                         case "#":
                             canvas[i][j] = new Wall();
                             break;
@@ -39,13 +39,15 @@ public class GameLoader {
                 }
             }
             GameState gameState = new GameState(canvas);
-            new GameController(gameState);
+            GameController controller = new GameController(gameState);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
