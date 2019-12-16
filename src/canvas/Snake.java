@@ -8,8 +8,6 @@ public class Snake implements Tile {
     private Direction direction;
     private List<Position> corePositions;
 
-    private boolean eatFruit;
-
     public Snake(Position position, OnStepForward listener) {
         this.direction = Direction.LEFT;
         this.corePositions = new ArrayList<>();
@@ -18,7 +16,7 @@ public class Snake implements Tile {
     }
 
     public void stepForward() {
-        updateCorePositions(this.direction);
+        updateCorePositions();
         listener.notifyStepForward();
     }
 
@@ -35,39 +33,49 @@ public class Snake implements Tile {
     }
 
     public void eatFruit(OnEatFruit listener) {
-        this.eatFruit = true;
-        listener.notifyEatFruit();
         System.out.println("Yam yam!");
+        extendCore();
+        listener.notifyEatFruit();
     }
 
-    private void updateCorePositions(Direction direction) {
-        Position headPosition = corePositions.get(0);
-        for (int i = 0; i < corePositions.size() - 1; i++) {
-            corePositions.set(i, corePositions.get(i + 1));
-        }
-        //System.out.println("Eat fruit? " + eatFruit);
-        if (!eatFruit) {
-            corePositions.remove(corePositions.size() - 1);
-        } else {
-            System.out.println("don't remove tail position: " + corePositions.get(corePositions.size() - 1));
-            eatFruit = false;
-        }
-
+    private void extendCore() {
+        Position headPosition = getHeadPosition();
         switch (direction) {
             case UP:
-                headPosition.setX(headPosition.getX() - 1);
+                corePositions.add(0, new Position(headPosition.getX() - 1, headPosition.getY()));
                 break;
             case DOWN:
-                headPosition.setX(headPosition.getX() + 1);
+                corePositions.add(0, new Position(headPosition.getX() + 1, headPosition.getY()));
                 break;
             case LEFT:
-                headPosition.setY(headPosition.getY() - 1);
+                corePositions.add(0, new Position(headPosition.getX(), headPosition.getY() - 1));
                 break;
             case RIGHT:
-                headPosition.setY(headPosition.getY() + 1);
+                corePositions.add(0, new Position(headPosition.getX(), headPosition.getY() + 1));
                 break;
         }
-        corePositions.add(0, headPosition);
+    }
+
+    private void updateCorePositions() {
+        Position headPosition = corePositions.get(0);
+        corePositions.remove(corePositions.size() - 1);
+
+        Position position = new Position(headPosition.getX(), headPosition.getY());
+        switch (direction) {
+            case UP:
+                position.setX(headPosition.getX() - 1);
+                break;
+            case DOWN:
+                position.setX(headPosition.getX() + 1);
+                break;
+            case LEFT:
+                position.setY(headPosition.getY() - 1);
+                break;
+            case RIGHT:
+                position.setY(headPosition.getY() + 1);
+                break;
+        }
+        corePositions.add(0, position);
     }
 
     @Override

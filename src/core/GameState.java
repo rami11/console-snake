@@ -8,9 +8,6 @@ public class GameState {
     private static int score = 0;
     private static int stepCount = 0;
 
-    private static final Ground GROUND = new Ground();
-    private static final Wall WALL = new Wall();
-
     private int m;
     private int n;
 
@@ -33,12 +30,14 @@ public class GameState {
         Position headPosition = snake.getHeadPosition();
         Tile tileAtHead = canvas[headPosition.getX()][headPosition.getY()];
 
-        if (tileAtHead instanceof Wall) {
+        if (tileAtHead instanceof Wall || tileAtHead instanceof Snake) {
             System.out.println("*************");
             System.out.println("* GAME OVER *");
             System.out.println("*************");
             System.exit(0);
-        } else if (tileAtHead instanceof Fruit) {
+        }
+
+        if (tileAtHead instanceof Fruit) {
             snake.eatFruit(() -> {
                 score++;
                 fruit.setPosition(getRandomPositionInCanvas());
@@ -60,6 +59,7 @@ public class GameState {
 
     private void displayCanvas() {
         System.out.printf("Score: %d, Steps: %d%n", score, stepCount);
+        //System.out.println("Fruit position:" + fruit.getPosition());
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 System.out.print(canvas[i][j] + " ");
@@ -81,9 +81,9 @@ public class GameState {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (i == 0 || i == m - 1 || j == 0 || j == n - 1) {
-                    canvas[i][j] = WALL;
+                    canvas[i][j] = Util.WALL;
                 } else {
-                    canvas[i][j] = GROUND;
+                    canvas[i][j] = Util.GROUND;
                 }
             }
         }

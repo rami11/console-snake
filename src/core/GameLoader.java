@@ -33,9 +33,6 @@ public class GameLoader {
                         case ".":
                             canvas[i][j] = new Ground();
                             break;
-//                        case "*":
-//                            canvas[i][j] = new Fruit();
-//                            break;
                     }
                 }
             }
