@@ -1,8 +1,7 @@
-if [ ! -e script_out ]
-then
+if [ ! -e script_out ]; then
 	mkdir script_out
 fi
-cd src
-javac *.java -d ../script_out/.
-cd ../script_out
-java core.GameStarter
+find | grep .java > source.txt
+javac @source.txt -d script_out/
+rm source.txt
+java -cp script_out/ core.GameStarter
