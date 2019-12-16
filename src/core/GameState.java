@@ -7,6 +7,7 @@ import util.Util;
 public class GameState {
     private static int score = 0;
     private static int stepCount = 0;
+    private static int gameSpeed = 1000; // one second interval
 
     private int m;
     private int n;
@@ -39,6 +40,7 @@ public class GameState {
 
         if (tileAtHead instanceof Fruit) {
             snake.eatFruit(() -> {
+                increaseGameSpeed();
                 score++;
                 fruit.setPosition(getRandomPositionInCanvas());
             });
@@ -59,7 +61,6 @@ public class GameState {
 
     private void displayCanvas() {
         System.out.printf("Score: %d, Steps: %d%n", score, stepCount);
-        //System.out.println("Fruit position:" + fruit.getPosition());
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 System.out.print(canvas[i][j] + " ");
@@ -73,8 +74,9 @@ public class GameState {
         System.out.println(direction);
     }
 
-    public void moveSnake() {
+    public void moveSnake() throws InterruptedException {
         snake.stepForward();
+        Thread.sleep(gameSpeed);
     }
 
     private void clearCanvas() {
@@ -86,6 +88,12 @@ public class GameState {
                     canvas[i][j] = Util.GROUND;
                 }
             }
+        }
+    }
+
+    private void increaseGameSpeed() {
+        if (gameSpeed > 350) {
+            gameSpeed -= 25;
         }
     }
 

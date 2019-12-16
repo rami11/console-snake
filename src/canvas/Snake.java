@@ -33,7 +33,7 @@ public class Snake implements Tile {
     }
 
     public void eatFruit(OnEatFruit listener) {
-        System.out.println("Yam yam!");
+        System.out.println("nom nom nom!");
         extendCore();
         listener.notifyEatFruit();
     }
@@ -58,24 +58,25 @@ public class Snake implements Tile {
 
     private void updateCorePositions() {
         Position headPosition = corePositions.get(0);
+
         corePositions.remove(corePositions.size() - 1);
 
-        Position position = new Position(headPosition.getX(), headPosition.getY());
+        Position newHeadPosition = new Position(headPosition.getX(), headPosition.getY());
         switch (direction) {
             case UP:
-                position.setX(headPosition.getX() - 1);
+                newHeadPosition.setX(headPosition.getX() - 1);
                 break;
             case DOWN:
-                position.setX(headPosition.getX() + 1);
+                newHeadPosition.setX(headPosition.getX() + 1);
                 break;
             case LEFT:
-                position.setY(headPosition.getY() - 1);
+                newHeadPosition.setY(headPosition.getY() - 1);
                 break;
             case RIGHT:
-                position.setY(headPosition.getY() + 1);
+                newHeadPosition.setY(headPosition.getY() + 1);
                 break;
         }
-        corePositions.add(0, position);
+        corePositions.add(0, newHeadPosition);
     }
 
     @Override
