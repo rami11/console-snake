@@ -6,7 +6,7 @@ import java.util.List;
 public class Snake implements Tile {
     private static final int INIT_SPEED = 1000;
     private static final int SPEED_CONST = 50;
-
+    boolean needToGrow;
     private OnStepForward listener;
     private Direction direction;
     private List<Position> corePositions;
@@ -30,6 +30,9 @@ public class Snake implements Tile {
 
     public void stepForward() throws InterruptedException {
         Thread.sleep(speed);
+        if (needToGrow) {
+            extendCore();
+        }
         updateCorePositions();
         listener.notifyStepForward();
     }
@@ -48,7 +51,7 @@ public class Snake implements Tile {
 
     public void eatFruit(OnEatFruit listener) {
         System.out.println("nom nom nom!");
-        extendCore();
+        needToGrow = true;
         listener.notifyEatFruit();
     }
 
@@ -68,6 +71,7 @@ public class Snake implements Tile {
                 corePositions.add(0, new Position(headPosition.getX(), headPosition.getY() + 1));
                 break;
         }
+        needToGrow = false;
     }
 
     private void updateCorePositions() {
