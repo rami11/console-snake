@@ -60,7 +60,7 @@ public class GameState {
     }
 
     private void displayCanvas() {
-        System.out.printf("Score: %d, Steps: %d%n", score, stepCount);
+        System.out.printf("%nScore: %d, Steps: %d%n", score, stepCount);
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 System.out.print(canvas[i][j] + " ");
