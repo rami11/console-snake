@@ -6,17 +6,20 @@ import java.util.List;
 public class Snake implements Tile {
     private static final int INIT_SPEED = 1000;
     private static final int SPEED_CONST = 50;
+
     boolean needToGrow;
-    private OnStepForward listener;
+    private int speed;
     private Direction direction;
     private List<Position> corePositions;
-    private int speed;
+
+    private OnStepForward listener;
 
     public Snake(Position position, OnStepForward listener) {
         this.direction = Direction.LEFT;
         this.corePositions = new ArrayList<>();
         this.corePositions.add(position);
         this.speed = INIT_SPEED;
+        this.needToGrow = false;
         this.listener = listener;
     }
 
