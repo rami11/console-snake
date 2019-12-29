@@ -7,7 +7,6 @@ import util.Util;
 public class GameState {
     private static int score = 0;
     private static int stepCount = 0;
-    private static int gameSpeed = 1000; // one second interval
 
     private int m;
     private int n;
@@ -75,8 +74,9 @@ public class GameState {
     }
 
     public void moveSnake() throws InterruptedException {
-        snake.stepForward();
-        Thread.sleep(gameSpeed);
+        while (true) {
+            snake.stepForward();
+        }
     }
 
     private void clearCanvas() {
@@ -92,8 +92,8 @@ public class GameState {
     }
 
     private void increaseGameSpeed() {
-        if (gameSpeed > 350) {
-            gameSpeed -= 25;
+        if (!snake.didReachSpeedCapacity()) {
+            snake.goFaster();
         }
     }
 

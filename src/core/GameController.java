@@ -41,8 +41,6 @@ public class GameController {
     }
 
     private void play() throws InterruptedException {
-        while (true) {
-            state.moveSnake();
-        }
+        state.moveSnake();
     }
 }
