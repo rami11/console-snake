@@ -1,4 +1,3 @@
-FROM openjdk:8-alpine
-
-WORKDIR /var/www
+FROM openjdk:14-alpine
+WORKDIR /app
 COPY . .
