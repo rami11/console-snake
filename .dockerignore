@@ -1,0 +1,9 @@
+# dirs
+.git/
+out/
+
+# files
+.gitignore
+.dockerignore
+Dockerfile
+README.md
