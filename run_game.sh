@@ -1,3 +1,5 @@
+#!/bin/sh
+
 find . | grep .java > source.txt
 javac @source.txt -d out
 rm source.txt

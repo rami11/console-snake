@@ -4,15 +4,14 @@
 
 # constants
 docker_file=Dockerfile
-image_name=rsn11/console-snake:latest
+image_name=rsn11/console-snake
 container_name=console-snake
 
-# build image
+# build and run the image
 echo Building ${image_name}
 echo "***************************************"
 docker build -f ${docker_file} -t ${image_name} . \
 && echo \
 && echo Running ${image_name}
 echo "***************************************"
-docker run --rm -it --name ${container_name} ${image_name} \
-    /bin/sh run_game.sh
+docker run --rm -it --name ${container_name} ${image_name}
